@@ -1,0 +1,141 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 20px;
+  background: #f4f0e8;
+}
+
+.card {
+  width: 100%;
+  max-width: 560px;
+  padding: 44px;
+  background: #fffdf8;
+  border: 1px solid #e5ddcf;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(65, 49, 30, 0.12);
+}
+
+.eyebrow,
+.result-label {
+  color: #b4512d;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.card h1 {
+  margin: 10px 0 8px;
+  color: #25221f;
+  font-size: clamp(2.2rem, 7vw, 3.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+}
+
+.intro {
+  max-width: 39ch;
+  margin-bottom: 32px;
+  color: #6f665c;
+}
+
+form,
+label {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  gap: 8px;
+  margin-bottom: 18px;
+  color: #4a4239;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+input,
+select {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 14px;
+  border: 1px solid #d8cdbd;
+  border-radius: 4px;
+  outline: none;
+  background: #fff;
+  color: #25221f;
+  font: inherit;
+  font-size: 1rem;
+}
+
+input:focus,
+select:focus {
+  border-color: #b4512d;
+  box-shadow: 0 0 0 3px rgba(180, 81, 45, 0.15);
+}
+
+button {
+  width: 100%;
+  min-height: 54px;
+  margin-top: 6px;
+  border: 0;
+  border-radius: 4px;
+  background: #b4512d;
+  color: #fffdf8;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+button:hover:not(:disabled) {
+  background: #913d23;
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.result-panel {
+  min-height: 138px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 28px;
+  padding: 20px;
+  border-top: 1px solid #e5ddcf;
+  text-align: center;
+}
+
+.result-panel strong {
+  color: #25221f;
+  font-size: 3.5rem;
+  line-height: 1;
+}
+
+.error {
+  margin: 0;
+  color: #a52828;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 520px) {
+  .card {
+    padding: 30px 22px;
+  }
+
+  .fields {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
