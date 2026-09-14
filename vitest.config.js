@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     include: ["src/**/*.test.jsx"],
-    pool: "forks",
+    pool: "threads",
     maxWorkers: 1,
   },
 });
