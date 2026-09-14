@@ -2,7 +2,7 @@ name: Deploy environments
 
 on:
   push:
-    branches: [develop, main]
+    branches: [develop, main, feature/green-test-environment]
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [main, develop]
@@ -31,61 +31,48 @@ jobs:
     steps:
       - name: Descargar código
         uses: actions/checkout@v4
-
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
-
       - name: Instalar dependencias
         run: npm ci
-
       - name: Ejecutar tests unitarios
         run: npm test
-
       - name: Instalar navegador de Playwright
-        run: npx playwright install --with-deps chromium
-
+        run: npx playwright install --with-deps chromium webkit
       - name: Ejecutar tests E2E
         run: npm run test:e2e
-
       - name: Ejecutar lint
         run: npm run lint
-
       - name: Generar build de validación
         run: npm run build:test
 
   test-preview:
     name: Deploy test preview
-    if: >-
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
     needs: quality
     runs-on: ubuntu-latest
     environment:
       name: test-pr-${{ github.event.pull_request.number }}
       url: https://LussmiTestIA.github.io/web/test/pr-${{ github.event.pull_request.number }}/
     steps:
-      - name: Descargar código de la PR
+      - name: Descargar código
         uses: actions/checkout@v4
-
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
-
       - name: Instalar dependencias
         run: npm ci
-
       - name: Generar build de test
         run: npm run build:test
         env:
           VITE_THEME: green
           VITE_DEPLOY_PATH: /web/test/pr-${{ github.event.pull_request.number }}/
           VITE_OUT_DIR: dist/test/pr-${{ github.event.pull_request.number }}
-
       - name: Publicar preview de la PR
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -95,11 +82,42 @@ jobs:
           destination_dir: test/pr-${{ github.event.pull_request.number }}
           keep_files: true
 
+  branch-test-preview:
+    name: Deploy branch test preview
+    if: github.ref == 'refs/heads/feature/green-test-environment'
+    needs: quality
+    runs-on: ubuntu-latest
+    environment:
+      name: test-branch
+      url: https://LussmiTestIA.github.io/web/test/green-test-environment/
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Generar build de test verde
+        run: npm run build:test
+        env:
+          VITE_THEME: green
+          VITE_DEPLOY_PATH: /web/test/green-test-environment/
+          VITE_OUT_DIR: dist/test/green-test-environment
+      - name: Publicar preview de la rama
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./dist/test/green-test-environment
+          destination_dir: test/green-test-environment
+          keep_files: true
+
   staging:
-    name: Build staging
-    if: >-
-      github.ref == 'refs/heads/develop' ||
-      (github.event_name == 'workflow_dispatch' && inputs.environment == 'staging')
+    name: Deploy staging
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && inputs.environment == 'staging')
     needs: quality
     runs-on: ubuntu-latest
     environment:
@@ -108,24 +126,19 @@ jobs:
     steps:
       - name: Descargar código
         uses: actions/checkout@v4
-
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
-
       - name: Instalar dependencias
         run: npm ci
-
       - name: Generar build de staging
         run: npm run build:staging
-
         env:
           VITE_THEME: blue
           VITE_DEPLOY_PATH: /web/staging/
           VITE_OUT_DIR: dist/staging
-
       - name: Publicar staging
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -135,14 +148,9 @@ jobs:
           destination_dir: staging
           keep_files: true
 
-      - name: Publicar URL de staging
-        run: echo "Staging disponible en https://LussmiTestIA.github.io/web/staging/"
-
   production:
     name: Deploy production
-    if: >-
-      github.ref == 'refs/heads/main' ||
-      (github.event_name == 'workflow_dispatch' && inputs.environment == 'production')
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && inputs.environment == 'production')
     needs: quality
     runs-on: ubuntu-latest
     environment:
@@ -151,24 +159,20 @@ jobs:
     steps:
       - name: Descargar código
         uses: actions/checkout@v4
-
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
-
       - name: Instalar dependencias
         run: npm ci
-
       - name: Generar build de producción
         run: npm run build:prod
         env:
           VITE_THEME: blue
           VITE_DEPLOY_PATH: /web/
           VITE_OUT_DIR: dist/production
-
-      - name: Publicar en GitHub Pages
+      - name: Publicar producción
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
