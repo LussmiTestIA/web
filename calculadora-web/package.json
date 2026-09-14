@@ -2,7 +2,7 @@
   "name": "calculadora-web",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://LussmiTestIA.github.io/calculadora-web",
+  "homepage": "https://LussmiTestIA.github.io/web",
   "type": "module",
   "scripts": {
     "dev": "vite",
