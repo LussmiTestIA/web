@@ -1,11 +1,17 @@
 body {
   margin: 0;
   min-width: 320px;
-  background: #f4f0e8;
-  color: #25221f;
+  background: #071b35;
+  color: #102a4c;
   font-family: Georgia, 'Times New Roman', serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 #root {

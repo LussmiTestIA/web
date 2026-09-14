@@ -1,9 +1,23 @@
 import { useState } from "react";
+import CreatorPage from "./CreatorPage.jsx";
 import "./App.css";
 
 const API_URL = "https://api-5cik.onrender.com/v1/api/calculadora";
 
+if (window.location.hash === "#creador") {
+  window.document.title = "Sobre este proyecto | Calculadora Cloud";
+}
+
 export default function App() {
+  if (window.location.hash === "#creador") {
+    return <CreatorPage />;
+  }
+
+  return <Calculator />;
+}
+
+function Calculator() {
+
   const [a, setA] = useState("");
   const [b, setB] = useState("");
   const [operacion, setOperacion] = useState("sumar");
@@ -18,6 +32,20 @@ export default function App() {
     if (a === "" || b === "") {
       setResultado(null);
       setError("Introduce un valor para A y otro para B.");
+      return;
+    }
+
+    const invalidValue = [
+      ["A", a],
+      ["B", b],
+    ].find(([, value]) => !Number.isInteger(Number(value)));
+
+    if (invalidValue) {
+      const [field, value] = invalidValue;
+      setResultado(null);
+      setError(
+        `El valor de ${field} "${value}" no es válido. Solo se aceptan números enteros.`,
+      );
       return;
     }
 
@@ -47,15 +75,25 @@ export default function App() {
 
   return (
     <main className="container">
-      <section className="card" aria-labelledby="titulo-calculadora">
-        <p className="eyebrow">Operación remota</p>
-        <h1 id="titulo-calculadora">Calculadora Cloud</h1>
-        <p className="intro">
-          Envía dos valores a la API y elige la operación que quieres realizar.
-        </p>
+      <div className="page-shell">
+        <section className="card" aria-labelledby="titulo-calculadora">
+          <div className="card-heading">
+            <div>
+              <p className="eyebrow">Operación remota</p>
+              <h1 id="titulo-calculadora">Calculadora Cloud</h1>
+              <p className="intro">
+                Envía dos valores a la API y elige la operación que quieres realizar.
+              </p>
+            </div>
+            <img
+              className="hero-art"
+              src={`${import.meta.env.BASE_URL}ai-calculator.svg`}
+              alt="Ilustración de una calculadora conectada a la nube"
+            />
+          </div>
 
-        <form onSubmit={calcular}>
-          <div className="fields">
+          <form onSubmit={calcular}>
+            <div className="fields">
             <label>
               <span>Valor A</span>
               <input
@@ -77,35 +115,43 @@ export default function App() {
                 onChange={(e) => setB(e.target.value)}
               />
             </label>
+            </div>
+
+            <label>
+              <span>Operación</span>
+              <select
+                value={operacion}
+                onChange={(e) => setOperacion(e.target.value)}
+              >
+                <option value="sumar">Sumar</option>
+                <option value="restar">Restar</option>
+              </select>
+            </label>
+
+            <button type="submit" disabled={cargando}>
+              {cargando ? "Calculando..." : "Calcular resultado"}
+            </button>
+          </form>
+
+          <div className="result-panel" aria-live="polite">
+            <span className="result-label">Resultado</span>
+            {error ? (
+              <p className="error" role="alert">
+                {error}
+              </p>
+            ) : (
+              <strong>{resultado ?? "--"}</strong>
+            )}
           </div>
+        </section>
 
-          <label>
-            <span>Operación</span>
-            <select
-              value={operacion}
-              onChange={(e) => setOperacion(e.target.value)}
-            >
-              <option value="sumar">Sumar</option>
-              <option value="restar">Restar</option>
-            </select>
-          </label>
-
-          <button type="submit" disabled={cargando}>
-            {cargando ? "Calculando..." : "Calcular resultado"}
-          </button>
-        </form>
-
-        <div className="result-panel" aria-live="polite">
-          <span className="result-label">Resultado</span>
-          {error ? (
-            <p className="error" role="alert">
-              {error}
-            </p>
-          ) : (
-            <strong>{resultado ?? "--"}</strong>
-          )}
-        </div>
-      </section>
+        <footer className="creator-footer">
+          <span>Hecha con IA, curiosidad y unas cuantas operaciones.</span>
+          <a href={`${import.meta.env.BASE_URL}#creador`}>
+            Sobre el creador <span aria-hidden="true">↗</span>
+          </a>
+        </footer>
+      </div>
     </main>
   );
 }
