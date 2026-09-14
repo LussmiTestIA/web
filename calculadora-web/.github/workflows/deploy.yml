@@ -2,7 +2,7 @@ name: Deploy environments
 
 on:
   push:
-    branches: [develop, main]
+    branches: [develop, main, feature/green-test-environment]
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [main, develop]
@@ -93,6 +93,43 @@ jobs:
           publish_branch: gh-pages
           publish_dir: ./dist/test/pr-${{ github.event.pull_request.number }}
           destination_dir: test/pr-${{ github.event.pull_request.number }}
+          keep_files: true
+
+  branch-test-preview:
+    name: Deploy branch test preview
+    if: github.ref == 'refs/heads/feature/green-test-environment'
+    needs: quality
+    runs-on: ubuntu-latest
+    environment:
+      name: test-branch
+      url: https://LussmiTestIA.github.io/web/test/green-test-environment/
+    steps:
+      - name: Descargar código de la rama
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Generar build de test verde
+        run: npm run build:test
+        env:
+          VITE_THEME: green
+          VITE_DEPLOY_PATH: /web/test/green-test-environment/
+          VITE_OUT_DIR: dist/test/green-test-environment
+
+      - name: Publicar preview de la rama
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./dist/test/green-test-environment
+          destination_dir: test/green-test-environment
           keep_files: true
 
   staging:
