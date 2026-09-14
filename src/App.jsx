@@ -1,16 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreatorPage from "./CreatorPage.jsx";
 import "./App.css";
 
 const API_URL = "https://api-5cik.onrender.com/v1/api/calculadora";
 const themeClass = import.meta.env.VITE_THEME === "green" ? "theme-green" : "";
 
-if (window.location.hash === "#creador") {
-  window.document.title = "Sobre este proyecto | Calculadora Cloud";
-}
-
 export default function App() {
-  if (window.location.hash === "#creador") {
+  const [isCreatorPage, setIsCreatorPage] = useState(
+    () => window.location.hash === "#creador",
+  );
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setIsCreatorPage(window.location.hash === "#creador");
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
+  useEffect(() => {
+    window.document.title = isCreatorPage
+      ? "Sobre este proyecto | Calculadora Cloud"
+      : "Calculadora Cloud";
+  }, [isCreatorPage]);
+
+  if (isCreatorPage) {
     return <CreatorPage />;
   }
 
