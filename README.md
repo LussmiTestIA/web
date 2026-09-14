@@ -11,8 +11,10 @@ El proyecto usa GitHub Actions y GitHub Pages con este flujo:
 | Producción | Push o merge a `main` | `https://LussmiTestIA.github.io/web/` |
 
 En una PR, el job `quality` ejecuta tests unitarios, Playwright, lint y build.
-Solo si todo pasa se publica la preview de test. Al integrar en `develop` se
-publica staging; al integrar en `main` se publica producción.
+Solo si todo pasa se publica la preview verde de test. Al integrar en `develop`
+se publica automáticamente staging y al integrar en `main` se publica
+automáticamente producción. Los tres entornos usan el mismo tema verde; la
+promoción se hace sobre el código ya integrado, no sobre una PR sin mergear.
 
 Para activar el sitio, configura **Settings > Pages** con `Deploy from a branch`,
 rama `gh-pages` y carpeta `/(root)`. La acción conserva las carpetas de los tres

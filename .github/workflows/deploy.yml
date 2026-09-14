@@ -117,7 +117,12 @@ jobs:
 
   staging:
     name: Deploy staging
-    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && inputs.environment == 'staging')
+    if: >-
+      (github.ref == 'refs/heads/develop' && github.event_name == 'push') ||
+      (github.event_name == 'pull_request' &&
+      github.event.pull_request.base.ref == 'develop' &&
+      github.event.pull_request.head.repo.full_name == github.repository) ||
+      (github.event_name == 'workflow_dispatch' && inputs.environment == 'staging')
     needs: quality
     runs-on: ubuntu-latest
     environment:
@@ -136,7 +141,7 @@ jobs:
       - name: Generar build de staging
         run: npm run build:staging
         env:
-          VITE_THEME: blue
+          VITE_THEME: green
           VITE_DEPLOY_PATH: /web/staging/
           VITE_OUT_DIR: dist/staging
       - name: Publicar staging
@@ -169,7 +174,7 @@ jobs:
       - name: Generar build de producción
         run: npm run build:prod
         env:
-          VITE_THEME: blue
+          VITE_THEME: green
           VITE_DEPLOY_PATH: /web/
           VITE_OUT_DIR: dist/production
       - name: Publicar producción
