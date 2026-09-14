@@ -3,6 +3,7 @@ import CreatorPage from "./CreatorPage.jsx";
 import "./App.css";
 
 const API_URL = "https://api-5cik.onrender.com/v1/api/calculadora";
+const themeClass = import.meta.env.VITE_THEME === "green" ? "theme-green" : "";
 
 if (window.location.hash === "#creador") {
   window.document.title = "Sobre este proyecto | Calculadora Cloud";
@@ -74,7 +75,7 @@ function Calculator() {
   };
 
   return (
-    <main className="container">
+    <main className={`container ${themeClass}`}>
       <div className="page-shell">
         <section className="card" aria-labelledby="titulo-calculadora">
           <div className="card-heading">

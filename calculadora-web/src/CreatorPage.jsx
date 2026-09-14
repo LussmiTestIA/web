@@ -1,10 +1,11 @@
 import "./App.css";
 
 const homeUrl = import.meta.env.BASE_URL;
+const themeClass = import.meta.env.VITE_THEME === "green" ? "theme-green" : "";
 
 export default function CreatorPage() {
   return (
-    <main className="creator-page">
+    <main className={`creator-page ${themeClass}`}>
       <article className="creator-story">
         <a className="back-link" href={homeUrl}>
           <span aria-hidden="true">←</span> Volver a la calculadora
