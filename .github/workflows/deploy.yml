@@ -28,9 +28,6 @@ jobs:
     name: Test gate
     runs-on: ubuntu-latest
     environment: test
-    defaults:
-      run:
-        working-directory: calculadora-web
     steps:
       - name: Descargar código
         uses: actions/checkout@v4
@@ -39,7 +36,6 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: calculadora-web/package-lock.json
       - name: Instalar dependencias
         run: npm ci
       - name: Ejecutar tests unitarios
@@ -61,9 +57,6 @@ jobs:
     environment:
       name: test-pr-${{ github.event.pull_request.number }}
       url: https://LussmiTestIA.github.io/web/test/pr-${{ github.event.pull_request.number }}/
-    defaults:
-      run:
-        working-directory: calculadora-web
     steps:
       - name: Descargar código
         uses: actions/checkout@v4
@@ -72,7 +65,6 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: calculadora-web/package-lock.json
       - name: Instalar dependencias
         run: npm ci
       - name: Generar build de test
@@ -86,7 +78,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./calculadora-web/dist/test/pr-${{ github.event.pull_request.number }}
+          publish_dir: ./dist/test/pr-${{ github.event.pull_request.number }}
           destination_dir: test/pr-${{ github.event.pull_request.number }}
           keep_files: true
 
@@ -98,9 +90,6 @@ jobs:
     environment:
       name: test-branch
       url: https://LussmiTestIA.github.io/web/test/green-test-environment/
-    defaults:
-      run:
-        working-directory: calculadora-web
     steps:
       - name: Descargar código
         uses: actions/checkout@v4
@@ -109,7 +98,6 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: calculadora-web/package-lock.json
       - name: Instalar dependencias
         run: npm ci
       - name: Generar build de test verde
@@ -123,7 +111,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./calculadora-web/dist/test/green-test-environment
+          publish_dir: ./dist/test/green-test-environment
           destination_dir: test/green-test-environment
           keep_files: true
 
@@ -135,9 +123,6 @@ jobs:
     environment:
       name: staging
       url: https://LussmiTestIA.github.io/web/staging/
-    defaults:
-      run:
-        working-directory: calculadora-web
     steps:
       - name: Descargar código
         uses: actions/checkout@v4
@@ -146,7 +131,6 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: calculadora-web/package-lock.json
       - name: Instalar dependencias
         run: npm ci
       - name: Generar build de staging
@@ -160,7 +144,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./calculadora-web/dist/staging
+          publish_dir: ./dist/staging
           destination_dir: staging
           keep_files: true
 
@@ -172,9 +156,6 @@ jobs:
     environment:
       name: production
       url: https://LussmiTestIA.github.io/web/
-    defaults:
-      run:
-        working-directory: calculadora-web
     steps:
       - name: Descargar código
         uses: actions/checkout@v4
@@ -183,7 +164,6 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: calculadora-web/package-lock.json
       - name: Instalar dependencias
         run: npm ci
       - name: Generar build de producción
@@ -197,5 +177,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./calculadora-web/dist/production
+          publish_dir: ./dist/production
           keep_files: true
