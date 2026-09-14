@@ -239,6 +239,73 @@ button:disabled {
   font-size: 0.95rem;
 }
 
+.theme-green {
+  --accent: #168454;
+  --accent-dark: #0d633d;
+  --accent-soft: rgba(22, 132, 84, 0.16);
+  --ink: #123b2c;
+  --muted: #4d7564;
+  --line: #b9dccb;
+  --surface: #f7fffa;
+}
+
+.container.theme-green,
+.creator-page.theme-green {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(74, 214, 139, 0.24), transparent 28%),
+    radial-gradient(circle at 90% 85%, rgba(21, 120, 74, 0.32), transparent 32%),
+    #09291e;
+}
+
+.theme-green .card,
+.theme-green .creator-story {
+  background: var(--surface);
+  border-color: rgba(91, 190, 139, 0.58);
+}
+
+.theme-green .eyebrow,
+.theme-green .result-label,
+.theme-green .creator-lead,
+.theme-green .back-link {
+  color: var(--accent);
+}
+
+.theme-green .card h1,
+.theme-green .creator-story h1,
+.theme-green .result-panel strong {
+  color: var(--ink);
+}
+
+.theme-green .intro,
+.theme-green label,
+.theme-green .creator-copy {
+  color: var(--muted);
+}
+
+.theme-green input,
+.theme-green select {
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.theme-green input:focus,
+.theme-green select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.theme-green button {
+  background: var(--accent);
+}
+
+.theme-green button:hover:not(:disabled) {
+  background: var(--accent-dark);
+}
+
+.theme-green .result-panel {
+  border-top-color: var(--line);
+}
+
 @media (max-width: 520px) {
   .container {
     align-items: flex-start;
